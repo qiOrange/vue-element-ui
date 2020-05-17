@@ -1,3 +1,4 @@
+// 只有admin 和editor 能使用
 export const isValidUsername = (str: string) => ['admin', 'editor'].indexOf(str.trim()) >= 0
 
 export const isExternal = (path: string) => /^(https?:|mailto:|tel:)/.test(path)

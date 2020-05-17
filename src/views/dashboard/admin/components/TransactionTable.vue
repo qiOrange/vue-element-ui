@@ -38,6 +38,8 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { getTransactions } from '@/api/transactions'
 import { ITransactionData } from '@/api/types'
+import { getTransactionsTest } from '../../../../../mock/transactions'
+// import da from "element-ui/src/locale/lang/da";
 
 @Component({
   name: 'TransactionTable',
@@ -64,7 +66,8 @@ export default class extends Vue {
   }
 
   private async fetchData() {
-    const { data } = await getTransactions({ /* Your params here */ })
+    const { data } = getTransactionsTest()
+    // const { data } = await getTransactions({ /* Your params here */ })
     this.list = data.items.slice(0, 8)
   }
 }

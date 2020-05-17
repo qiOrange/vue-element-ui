@@ -34,6 +34,14 @@ const roles: IRoleData[] = [
     }]
   }
 ]
+const rolesTest: IRoleData[] = [
+  {
+    key: 'admin',
+    name: 'admin',
+    description: 'Super Administrator. Have access to view all pages.',
+    routes: routes
+  }
+]
 
 export const getRoles = (req: Request, res: Response) => {
   return res.json({
@@ -77,4 +85,8 @@ export const getRoutes = (req: Request, res: Response) => {
       routes
     }
   })
+}
+
+export const getRoutesTest = () => {
+  return rolesTest
 }

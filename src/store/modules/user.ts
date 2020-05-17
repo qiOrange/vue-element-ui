@@ -6,6 +6,8 @@ import { PermissionModule } from './permission'
 import { TagsViewModule } from './tags-view'
 import store from '@/store'
 
+
+// TODO userInfo 未写
 export interface IUserState {
   token: string
   name: string
@@ -17,11 +19,12 @@ export interface IUserState {
 
 @Module({ dynamic: true, store, name: 'user' })
 class User extends VuexModule implements IUserState {
+
   public token = getToken() || ''
   public name = ''
-  public avatar = ''
+  public avatar = 'https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif'
   public introduction = ''
-  public roles: string[] = []
+  public roles: string[] = ['admin']
   public email = ''
 
   @Mutation
@@ -58,9 +61,20 @@ class User extends VuexModule implements IUserState {
   public async Login(userInfo: { username: string, password: string}) {
     let { username, password } = userInfo
     username = username.trim()
-    const { data } = await login({ username, password })
-    setToken(data.accessToken)
-    this.SET_TOKEN(data.accessToken)
+
+
+    try {
+      // TODO 失败的返回信息
+      const response =await login({ username, password })
+      const token = Object.getOwnPropertyDescriptor(response,"token")?.value
+      setToken(token)
+      this.SET_TOKEN(token)
+      // console.log('请求成功',response);
+    }catch(error){
+      console.log('请求失败',error);
+    }
+
+
   }
 
   @Action
@@ -75,20 +89,26 @@ class User extends VuexModule implements IUserState {
     if (this.token === '') {
       throw Error('GetUserInfo: token is undefined!')
     }
-    const { data } = await getUserInfo({ /* Your params here */ })
-    if (!data) {
+    const response = await getUserInfo({ /* Your params here */ })
+    console.log(response)
+
+    if (!response) {
       throw Error('Verification failed, please Login again.')
     }
-    const { roles, name, avatar, introduction, email } = data.user
+    const user = Object.getOwnPropertyDescriptor(response,"user")?.value
+
     // roles must be a non-empty array
-    if (!roles || roles.length <= 0) {
-      throw Error('GetUserInfo: roles must be a non-null array!')
-    }
-    this.SET_ROLES(roles)
-    this.SET_NAME(name)
-    this.SET_AVATAR(avatar)
-    this.SET_INTRODUCTION(introduction)
-    this.SET_EMAIL(email)
+    // TODO 菜单权限 写死
+    // if (!roles || roles.length <= 0) {
+    //   throw Error('GetUserInfo: roles must be a non-null array!')
+    // }
+    this.SET_ROLES(['admin'])
+
+    this.SET_NAME(user.username)
+    // 头像
+    // this.SET_AVATAR(avatar)
+    // this.SET_INTRODUCTION(introduction)
+    this.SET_EMAIL(user.email)
   }
 
   @Action

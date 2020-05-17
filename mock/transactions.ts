@@ -24,3 +24,12 @@ export const getTransactions = (req: Request, res: Response) => {
     }
   })
 }
+
+export const getTransactionsTest = () => {
+  return ({
+    data: {
+      total: transactionList.length,
+      items: transactionList
+    }
+  })
+}

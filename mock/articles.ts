@@ -32,7 +32,7 @@ export const getArticles = (req: Request, res: Response) => {
   let mockList = articleList.filter(item => {
     if (importance && item.importance !== +importance) return false
     if (type && item.type !== type) return false
-    if (title && item.title.indexOf(title) < 0) return false
+    if (title && item.title.indexOf(<string>title) < 0) return false
     return true
   })
 
@@ -40,6 +40,7 @@ export const getArticles = (req: Request, res: Response) => {
     mockList = mockList.reverse()
   }
 
+  // @ts-ignore
   const pageList = mockList.filter((_, index) => index < limit * page && index >= limit * (page - 1))
 
   return res.json({
